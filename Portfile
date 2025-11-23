@@ -9,7 +9,7 @@ distfiles               ${name}_${version}.orig.tar.gz
 
 homepage                https://sources.debian.org/src/xfishtank/${version}-1/README
 
-#master_sites            debian:x/${name}/ 
+master_sites            debian:x/${name}/
 worksrcdir              ${name}-${version}
 #distname                ${name}_${version}.orig
 

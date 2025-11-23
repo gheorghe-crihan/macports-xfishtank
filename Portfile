@@ -5,13 +5,13 @@ PortSystem              1.0
 name                    xfishtank
 version                 2.5
 revision                0
-distfiles               ${name}-${version}.tar.gz
+distfiles               ${name}_${version}.orig.tar.gz
 
 homepage                https://sources.debian.org/src/xfishtank/${version}-1/README
 
-master_sites            DEBIAN 
-#MASTER_SITE_SUBDIR=	pool/main/x/xfishtank/
-#DISTNAME=	xfishtank_2.5.orig
+#master_sites            debian:x/${name}/ 
+worksrcdir              ${name}-${version}
+#distname                ${name}_${version}.orig
 
 categories              x11
 
@@ -36,7 +36,6 @@ use_xmkmf               yes
 
 #uses                    xorg
 #use_xorg                x11 xext
-#worksrcpath             $(wrkdir)/$(name)-$(version)
 
 #timestamp              1726130557
 checksums               rmd160  c5f23d3e34d7390d4cb0b0a6334103b1b8879812 \
@@ -47,19 +46,21 @@ use_configure           no
 
 depends_lib             port:imlib2
 
-patchfiles              c2ps.c.patch \
-                        Makefile.patch
+patchfiles              Imakefile.patch \
+                        makeh.c.patch \
+                        medcut.c.patch \
+                        medcut.h.patch \
+                        xfish.c.patch
 
 set xsshacksdir         bin/xscreensaver-hacks
 set xssconfdir          share/xscreensaver/config
 
 pre-build {
-                        ${CC} $(worksrcpath)/makeh.c -o $(worksrcpath)/makeh
+                        system "${configure.cc} ${worksrcpath}/makeh.c -o ${worksrcpath}/makeh"
 }
 
 destroot {
-                        mkdir ${destroot}/${prefix}${xsshacksdir} ${destroot}${prefix}/${xssconfdir}
-                        cp ${filespath}/${name}.xml.in ${destroot}${prefix}/${xssconfdir}/${name}.xml
-                        (cd ${destroot}${prefix}/${xsshacksdir} ; ln -f ${destroot}${prefix}/bin/${name} ${destroot}${prefix}/${xsshacksdir}/)
-
+                        file mkdir ${destroot}/${prefix}${xsshacksdir} ${destroot}${prefix}/${xssconfdir}
+                        copy ${filespath}/${name}.xml.in ${destroot}${prefix}/${xssconfdir}/${name}.xml
+#                        system "(cd ${destroot}${prefix}/${xsshacksdir} ; ln -f ${destroot}${prefix}/bin/${name} ${destroot}${prefix}/${xsshacksdir}/)"
 }

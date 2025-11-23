@@ -31,9 +31,11 @@ long_description        There are lots of programs for lots of platforms to make
 license                 BSD3CLAUSE
 license_file            $(worksrcpath)/LICENSE
 
-uses                    imake xorg
+use_xmkmf               yes
+
+uses                    xorg
 use_xorg                x11 xext
-worksrcpath		$(WRKDIR)/$(name)-$(version)
+worksrcpath             $(WRKDIR)/$(name)-$(version)
 
 #timestamp              1726130557
 checksums               rmd160  c5f23d3e34d7390d4cb0b0a6334103b1b8879812 \
@@ -47,20 +49,16 @@ depends_lib             port:imlib2
 patchfiles              c2ps.c.patch \
                         Makefile.patch
 
-XSSHACKSDIR=    bin/xscreensaver-hacks
-XSSCONFDIR=     share/xscreensaver/config
+set xsshacksdir         bin/xscreensaver-hacks
+set xssconfdir          share/xscreensaver/config
 
 pre-build {
-        ${CC} $(worksrcdir)/makeh.c -o $(worksrcdir)/makeh
+                        ${CC} $(worksrcdir)/makeh.c -o $(worksrcdir)/makeh
 }
 
 destroot {
-#	${mkdir} ${STAGEDIR}/${prefix}/${XSSHACKSDIR} ${STAGEDIR}/${prefix}/${XSSCONFDIR}
-#	${cp} ${PATCHDIR}/${name}.xml.in ${STAGEDIR}/${prefix}/${XSSCONFDIR}/${name}.xml
-#	(cd 11${STAGEDIR}/${prefix}/${XSSHACKSDIR} ; ${LN} -f ${STAGEDIR}/${prefix}/bin/${name} ${STAGEDIR}/${prefix}/${XSSHACKSDIR}/)
+                        mkdir ${destroot}/${prefix}${xsshacksdir} ${destroot}${prefix}/${xssconfdir}
+                        cp ${PATCHDIR}/${name}.xml.in ${destroot}${prefix}/${xssconfdir}/${name}.xml
+                        (cd ${destroot}${prefix}/${xsshacksdir} ; ln -f ${destroot}${prefix}/bin/${name} ${destroot}${prefix}/${xsshacksdir}/)
 
-                        xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin
-
-                        xinstall -d ${destroot}${prefix}/share/man/man1
-                        xinstall -m 0644 ${worksrcpath}/${name}.1 ${destroot}${prefix}/share/man/man1
 }
